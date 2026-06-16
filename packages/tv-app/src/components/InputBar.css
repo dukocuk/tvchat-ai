@@ -1,0 +1,130 @@
+.input-bar {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 32px;
+  background: #0f0f0f;
+  border-top: 1px solid #1e1e1e;
+  min-height: 140px;
+}
+
+/* QR section */
+.input-bar-qr {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 8px;
+  min-width: 110px;
+}
+
+.input-bar-qr-code {
+  background: white;
+  border-radius: 8px;
+  padding: 6px;
+  border: 3px solid #2a2a2a;
+}
+
+.input-bar-qr-code--connected {
+  border-color: #22c55e;
+}
+
+.input-bar-qr-label {
+  font-size: 18px;
+  color: #666666;
+  white-space: nowrap;
+}
+
+/* Compose preview */
+.input-bar-compose {
+  -webkit-flex: 1;
+  flex: 1;
+  background: #1a1a1a;
+  border: 2px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 20px 28px;
+  min-height: 80px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  word-break: break-word;
+}
+
+.input-bar-preview {
+  font-size: 28px;
+  color: #f0f0f0;
+  line-height: 1.5;
+}
+
+.input-bar-preview-cursor {
+  color: #a855f7;
+  -webkit-animation: blink 0.8s step-end infinite;
+  animation: blink 0.8s step-end infinite;
+}
+
+@-webkit-keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.input-bar-placeholder {
+  font-size: 28px;
+  color: #444444;
+  font-style: italic;
+}
+
+/* Send button */
+.input-bar-send {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #a855f7;
+  color: #ffffff;
+  font-size: 36px;
+  font-weight: 700;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+}
+
+.input-bar-send--busy {
+  background: #3a1a5c;
+}
+
+.input-bar-send.focused,
+.input-bar-send:focus {
+  outline: 4px solid #FFD700;
+  outline-offset: 4px;
+}
+
+.input-bar-spinner {
+  display: inline-block;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  from { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+  to   { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

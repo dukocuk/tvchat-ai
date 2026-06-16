@@ -1,0 +1,100 @@
+.setup-screen {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #0a0a0a;
+  gap: 32px;
+}
+
+.setup-logo {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: baseline;
+  align-items: baseline;
+  gap: 0;
+}
+
+.setup-logo-text {
+  font-size: 72px;
+  font-weight: 700;
+  color: #f0f0f0;
+  letter-spacing: -2px;
+}
+
+.setup-logo-ai {
+  font-size: 72px;
+  font-weight: 700;
+  color: #a855f7;
+  letter-spacing: -2px;
+}
+
+.setup-tagline {
+  font-size: 28px;
+  color: #888888;
+  margin-top: -24px;
+}
+
+.setup-qr-wrap {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 4px solid #2a2a2a;
+  transition: border-color 0.3s;
+}
+
+.setup-qr-wrap--connected {
+  border-color: #22c55e;
+}
+
+.setup-status {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  color: #cccccc;
+}
+
+.setup-status-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #555555;
+  display: inline-block;
+}
+
+.setup-status-dot--connecting,
+.setup-status-dot--disconnected {
+  background: #888888;
+}
+
+.setup-status-dot--connected {
+  background: #a855f7;
+}
+
+.setup-status-dot--peer_connected {
+  background: #22c55e;
+}
+
+.setup-status-dot--error {
+  background: #ef4444;
+}
+
+.setup-status-text {
+  color: #cccccc;
+}
+
+.setup-instructions {
+  font-size: 26px;
+  color: #666666;
+  text-align: center;
+  line-height: 1.6;
+}

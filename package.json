@@ -1,0 +1,15 @@
+{
+  "name": "clautv-ai",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:relay": "npm run dev -w packages/relay",
+    "dev:tv": "npm run dev -w packages/tv-app",
+    "dev:companion": "npm run dev -w packages/companion",
+    "build:tv": "npm run build -w packages/tv-app",
+    "build:companion": "npm run build -w packages/companion",
+    "generate:icon": "node scripts/generate-icon.js"
+  }
+}

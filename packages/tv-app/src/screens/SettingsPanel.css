@@ -1,0 +1,131 @@
+.settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  z-index: 100;
+}
+
+.settings-panel {
+  width: 560px;
+  height: 100%;
+  background: #111111;
+  border-left: 1px solid #2a2a2a;
+  padding: 60px 48px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-heading {
+  font-size: 44px;
+  font-weight: 700;
+  color: #f0f0f0;
+  margin-bottom: 16px;
+}
+
+.settings-section-label {
+  font-size: 22px;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.settings-model-list {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-model-option {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 16px;
+  background: #1a1a1a;
+  border: 2px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  cursor: pointer;
+  color: #cccccc;
+  font-size: 28px;
+  text-align: left;
+  width: 100%;
+}
+
+.settings-model-option--active {
+  border-color: #a855f7;
+  background: #1e0a3c;
+  color: #f0f0f0;
+}
+
+.settings-model-option.focused,
+.settings-model-option:focus {
+  outline: 4px solid #FFD700;
+  outline-offset: 2px;
+}
+
+.settings-model-name {
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+.settings-model-badge {
+  font-size: 20px;
+  background: #2a2a2a;
+  color: #888888;
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+
+.settings-model-option--active .settings-model-badge {
+  background: #4c1d95;
+  color: #c4b5fd;
+}
+
+.settings-model-check {
+  font-size: 28px;
+  color: #a855f7;
+}
+
+.settings-divider {
+  border-top: 1px solid #2a2a2a;
+}
+
+.settings-btn {
+  background: #1a1a1a;
+  border: 2px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  font-size: 28px;
+  color: #f0f0f0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.settings-btn--danger {
+  color: #ef4444;
+  border-color: #3a1a1a;
+  background: #1a0a0a;
+}
+
+.settings-btn.focused,
+.settings-btn:focus {
+  outline: 4px solid #FFD700;
+  outline-offset: 2px;
+}
