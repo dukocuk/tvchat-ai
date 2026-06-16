@@ -10,22 +10,16 @@ export default defineConfig({
       additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
     }),
   ],
+  server: {
+    host: true,   // bind to 0.0.0.0 so phone on same WiFi can reach the dev server
+    port: 5173,
+  },
   build: {
     outDir: 'dist',
-    // Single chunk for Tizen — no dynamic imports on M47
     rollupOptions: {
       output: {
         manualChunks: undefined,
       },
     },
-  },
-  // Relay URL injected at build time; override with .env.local
-  define: {
-    'import.meta.env.VITE_RELAY_URL': JSON.stringify(
-      process.env.VITE_RELAY_URL || 'wss://clautv-relay.onrender.com'
-    ),
-    'import.meta.env.VITE_COMPANION_URL': JSON.stringify(
-      process.env.VITE_COMPANION_URL || 'https://companion.clautv.ai'
-    ),
   },
 });
