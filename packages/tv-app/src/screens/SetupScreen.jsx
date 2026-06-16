@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import './SetupScreen.css';
 
 var COMPANION_URL = import.meta.env.VITE_COMPANION_URL || 'https://companion.clautv.ai';
 
 var STATUS_LABELS = {
-  disconnected: 'Connecting to relay…',
-  connecting:   'Connecting to relay…',
-  connected:    'Waiting for phone — scan the QR code',
+  disconnected:   'Connecting to relay…',
+  connecting:     'Connecting to relay…',
+  connected:      'Waiting for phone — scan the QR code',
   peer_connected: 'Phone connected! Enter your API key.',
-  error:        'Relay connection failed. Retrying…',
+  error:          'Relay connection failed. Retrying…',
 };
+
+var SLOW_CONNECT_SECS = 8; // after this many seconds, show the warm-up hint
 
 export default function SetupScreen(props) {
   var relay = props.relay;
@@ -18,11 +20,27 @@ export default function SetupScreen(props) {
   var statusText = STATUS_LABELS[relay.status] || relay.status;
   var phoneConnected = relay.status === 'peer_connected';
 
+  var [slowConnect, setSlowConnect] = useState(false);
+
+  // If still connecting after SLOW_CONNECT_SECS, surface the warm-up hint
+  useEffect(function () {
+    var isConnecting = relay.status === 'connecting' || relay.status === 'disconnected';
+    if (!isConnecting) {
+      setSlowConnect(false);
+      return;
+    }
+
+    var timer = setTimeout(function () {
+      setSlowConnect(true);
+    }, SLOW_CONNECT_SECS * 1000);
+
+    return function () { clearTimeout(timer); };
+  }, [relay.status]);
+
   return React.createElement(
     'div',
     { className: 'setup-screen' },
 
-    // Logo / title
     React.createElement(
       'div',
       { className: 'setup-logo' },
@@ -32,7 +50,6 @@ export default function SetupScreen(props) {
 
     React.createElement('p', { className: 'setup-tagline' }, 'AI chat powered by Claude'),
 
-    // QR code
     React.createElement(
       'div',
       { className: 'setup-qr-wrap' + (phoneConnected ? ' setup-qr-wrap--connected' : '') },
@@ -45,7 +62,6 @@ export default function SetupScreen(props) {
       })
     ),
 
-    // Status
     React.createElement(
       'div',
       { className: 'setup-status' },
@@ -53,6 +69,13 @@ export default function SetupScreen(props) {
         className: 'setup-status-dot setup-status-dot--' + relay.status,
       }),
       React.createElement('span', { className: 'setup-status-text' }, statusText)
+    ),
+
+    // Slow-connect hint shown after SLOW_CONNECT_SECS of waiting
+    slowConnect && React.createElement(
+      'p',
+      { className: 'setup-warmup-hint' },
+      'Still connecting… relay may be warming up. This can take ~10 s on first load.'
     ),
 
     React.createElement(

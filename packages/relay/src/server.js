@@ -101,3 +101,8 @@ wss.on('connection', (ws) => {
 server.listen(PORT, () => {
   console.log('clautv relay listening on port ' + PORT);
 });
+
+process.on('SIGTERM', () => {
+  wss.clients.forEach((ws) => ws.close(1001, 'Server shutting down'));
+  server.close(() => process.exit(0));
+});

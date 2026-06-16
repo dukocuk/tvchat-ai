@@ -10,6 +10,7 @@
     "dev:companion": "npm run dev -w packages/companion",
     "build:tv": "npm run build -w packages/tv-app",
     "build:companion": "npm run build -w packages/companion",
-    "generate:icon": "node scripts/generate-icon.js"
+    "generate:icon": "node scripts/generate-icon.js",
+    "package:tizen": "node scripts/package-tizen.js"
   }
 }

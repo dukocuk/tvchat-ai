@@ -104,6 +104,15 @@
   color: #cccccc;
 }
 
+.setup-warmup-hint {
+  font-size: 22px;
+  color: #a855f7;
+  text-align: center;
+  max-width: 600px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
 .setup-instructions {
   font-size: 26px;
   color: #666666;

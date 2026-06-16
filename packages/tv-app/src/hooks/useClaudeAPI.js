@@ -22,6 +22,11 @@ export function useClaudeAPI() {
     setStreaming(true);
     setError(null);
 
+    // 60-second hard timeout — prevents "thinking forever" if API hangs
+    var timeoutId = setTimeout(function () {
+      controller.abort();
+    }, 60000);
+
     var requestBody = {
       model: model,
       max_tokens: 4096,
@@ -72,12 +77,22 @@ export function useClaudeAPI() {
         }
       })
       .catch(function (err) {
-        if (err.name === 'AbortError') return;
+        if (err.name === 'AbortError') {
+          // Could be user cancel or our 60s timeout
+          var timedOut = controller.signal.aborted && timeoutId;
+          if (timedOut) {
+            var msg = 'Request timed out after 60 seconds';
+            setError(msg);
+            onDone(msg);
+          }
+          return;
+        }
         var msg = err.message || 'Unknown error';
         setError(msg);
         onDone(msg);
       })
       .finally(function () {
+        clearTimeout(timeoutId);
         setStreaming(false);
       });
   }, []);
