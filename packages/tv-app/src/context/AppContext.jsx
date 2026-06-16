@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import {
   getApiKey, setApiKey, clearApiKey,
   getModel, setModel,
+  getSystemPrompt, setSystemPrompt,
   getConversations, saveConversations,
   getActiveConversationId, setActiveConversationId,
 } from '../utils/storage';
@@ -16,6 +17,13 @@ var MODELS = [
   { id: 'claude-opus-4-8',           label: 'Opus 4.8',   badge: 'Powerful' },
 ];
 
+var SYSTEM_PROMPT_PRESETS = [
+  { label: 'Default',  prompt: '',                                                    badge: '' },
+  { label: 'Concise',  prompt: 'Be concise and direct. Avoid unnecessary preamble.',  badge: 'Brief' },
+  { label: 'Friendly', prompt: 'Be warm, casual, and conversational.',                badge: 'Warm' },
+  { label: 'Coder',    prompt: 'You are an expert programmer. Prefer code examples and be precise.', badge: 'Dev' },
+];
+
 function getInitialState() {
   var conversations = getConversations();
   var activeId = getActiveConversationId();
@@ -25,6 +33,7 @@ function getInitialState() {
     screen: getApiKey() ? 'chat' : 'setup',
     apiKey: getApiKey(),
     model: getModel(),
+    systemPrompt: getSystemPrompt(),
     conversations: conversations,
     activeConversation: active,
     streamingText: '',
@@ -54,6 +63,10 @@ function reducer(state, action) {
       setModel(action.model);
       return Object.assign({}, state, { model: action.model });
     }
+    case 'SYSTEM_PROMPT_SET': {
+      setSystemPrompt(action.prompt);
+      return Object.assign({}, state, { systemPrompt: action.prompt });
+    }
     case 'CONVERSATION_NEW': {
       var newConv = createConversation('');
       var updatedList = state.conversations.concat([newConv]);
@@ -75,7 +88,7 @@ function reducer(state, action) {
     case 'MESSAGE_USER_ADD': {
       if (!state.activeConversation) return state;
       var updated = addMessage(state.activeConversation, 'user', action.content);
-      // Update title from first real text message
+      // Set title from first real text message
       if (state.activeConversation.messages.length === 0) {
         var firstText = action.content.find(function (b) { return b.type === 'text'; });
         if (firstText) {
@@ -131,7 +144,7 @@ export function AppProvider(props) {
 
   return React.createElement(
     AppContext.Provider,
-    { value: { state: state, dispatch: dispatch, MODELS: MODELS } },
+    { value: { state: state, dispatch: dispatch, MODELS: MODELS, SYSTEM_PROMPT_PRESETS: SYSTEM_PROMPT_PRESETS } },
     props.children
   );
 }

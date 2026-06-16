@@ -4,6 +4,7 @@ var RELAY_URL = import.meta.env.VITE_RELAY_URL || 'wss://clautv-relay.onrender.c
 
 export function useRelay(roomId, onMessage) {
   var [status, setStatus] = useState('connecting');
+  var [reconnectKey, setReconnectKey] = useState(0);
   var wsRef = useRef(null);
   var onMessageRef = useRef(onMessage);
   onMessageRef.current = onMessage;
@@ -22,6 +23,7 @@ export function useRelay(roomId, onMessage) {
       return;
     }
     wsRef.current = ws;
+    setStatus('connecting');
 
     ws.onopen = function () {
       ws.send(JSON.stringify({ type: 'join', room: roomId, role: 'phone' }));
@@ -35,6 +37,7 @@ export function useRelay(roomId, onMessage) {
         setStatus('connected');
         onMessageRef.current(msg);
       } else if (msg.type === 'peer_left') {
+        // TV disconnected — stay on relay, waiting for TV to come back
         setStatus('peer_gone');
       } else {
         onMessageRef.current(msg);
@@ -52,7 +55,7 @@ export function useRelay(roomId, onMessage) {
     return function () {
       ws.close();
     };
-  }, [roomId]);
+  }, [roomId, reconnectKey]);
 
   var send = useCallback(function (payload) {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
@@ -60,5 +63,12 @@ export function useRelay(roomId, onMessage) {
     }
   }, []);
 
-  return { status: status, send: send };
+  var reconnect = useCallback(function () {
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
+    setReconnectKey(function (k) { return k + 1; });
+  }, []);
+
+  return { status: status, send: send, reconnect: reconnect };
 }

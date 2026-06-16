@@ -30,24 +30,43 @@ export default function App() {
   var relay = useRelay(roomId, handleMessage);
 
   if (!roomId) {
-    return React.createElement(ErrorScreen, { message: 'Invalid pairing URL. Please rescan the QR code on your TV.' });
+    return React.createElement(ErrorScreen, {
+      message: 'Invalid pairing URL. Please rescan the QR code on your TV.',
+    });
   }
 
-  if (relay.status === 'error' || relay.status === 'disconnected') {
-    return React.createElement(ErrorScreen, { message: 'Cannot reach the relay server. Check your internet connection and rescan the QR code.' });
+  if (relay.status === 'error') {
+    return React.createElement(ErrorScreen, {
+      message: 'Cannot reach the relay server. Check your internet connection.',
+      onRetry: relay.reconnect,
+    });
+  }
+
+  if (relay.status === 'disconnected') {
+    return React.createElement(ErrorScreen, {
+      message: 'Connection lost. Tap to retry.',
+      onRetry: relay.reconnect,
+    });
   }
 
   if (relay.status === 'connecting') {
-    return React.createElement(ConnectingScreen, null);
+    return React.createElement(ConnectingScreen, { message: 'Connecting to TV…' });
   }
 
+  // TV peer left — still connected to relay, waiting for TV to reconnect
   if (relay.status === 'peer_gone') {
-    return React.createElement(ErrorScreen, { message: 'The TV disconnected. Rescan the QR code to reconnect.' });
+    return React.createElement(ConnectingScreen, {
+      message: 'TV disconnected — waiting to reconnect…',
+    });
   }
 
   if (context === 'setup') {
     return React.createElement(SetupKeyScreen, { relay: relay, acknowledged: tvAcknowledged });
   }
 
-  return React.createElement(ChatInputScreen, { relay: relay, acknowledged: tvAcknowledged, onAck: function () { setTvAcknowledged(false); } });
+  return React.createElement(ChatInputScreen, {
+    relay: relay,
+    acknowledged: tvAcknowledged,
+    onAck: function () { setTvAcknowledged(false); },
+  });
 }

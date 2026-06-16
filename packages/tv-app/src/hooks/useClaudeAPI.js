@@ -14,7 +14,7 @@ export function useClaudeAPI() {
   var [error, setError] = useState(null);
   var abortRef = useRef(null);
 
-  var sendMessage = useCallback(function (apiKey, model, apiMessages, onToken, onDone) {
+  var sendMessage = useCallback(function (apiKey, model, systemPrompt, apiMessages, onToken, onDone) {
     if (abortRef.current) abortRef.current.abort();
 
     var controller = new AbortController();
@@ -22,12 +22,15 @@ export function useClaudeAPI() {
     setStreaming(true);
     setError(null);
 
-    var body = JSON.stringify({
+    var requestBody = {
       model: model,
       max_tokens: 4096,
       stream: SUPPORTS_STREAMING,
       messages: apiMessages,
-    });
+    };
+    if (systemPrompt) {
+      requestBody.system = systemPrompt;
+    }
 
     fetch(API_URL, {
       method: 'POST',
@@ -38,7 +41,7 @@ export function useClaudeAPI() {
         'anthropic-version': API_VERSION,
         'anthropic-dangerous-direct-browser-access': 'true',
       },
-      body: body,
+      body: JSON.stringify(requestBody),
     })
       .then(function (res) {
         if (!res.ok) {
@@ -58,6 +61,10 @@ export function useClaudeAPI() {
               data.content.forEach(function (block) {
                 if (block.type === 'text') text += block.text;
               });
+            }
+            if (!text) {
+              onDone('Empty response from API');
+              return;
             }
             onToken(text);
             onDone(null);

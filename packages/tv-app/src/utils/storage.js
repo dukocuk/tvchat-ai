@@ -58,6 +58,24 @@ export function saveConversations(conversations) {
   }
 }
 
+export function getSystemPrompt() {
+  try {
+    return localStorage.getItem(PREFIX + 'system_prompt') || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+export function setSystemPrompt(prompt) {
+  try {
+    if (prompt) {
+      localStorage.setItem(PREFIX + 'system_prompt', prompt);
+    } else {
+      localStorage.removeItem(PREFIX + 'system_prompt');
+    }
+  } catch (e) {}
+}
+
 export function getActiveConversationId() {
   try {
     return localStorage.getItem(PREFIX + 'active_id') || null;

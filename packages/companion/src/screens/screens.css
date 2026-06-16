@@ -215,3 +215,49 @@
   border-radius: 8px;
   user-select: none;
 }
+
+/* Retry button (ErrorScreen) */
+.retry-btn {
+  background: #a855f7;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 14px 48px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Image inline error */
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1a0a0a;
+  border: 1px solid #5a1a1a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 8px 16px 0;
+  font-size: 14px;
+  color: #ef4444;
+  gap: 8px;
+}
+
+.image-error-dismiss {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+/* Image processing indicator */
+.image-loading {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #888888;
+  font-style: italic;
+}

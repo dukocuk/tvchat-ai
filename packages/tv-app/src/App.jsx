@@ -42,6 +42,12 @@ export default function App() {
     }
   }, [state.screen, relay.status]);
 
+  // Clear preview text when conversation changes
+  var activeConvId = state.activeConversation ? state.activeConversation.id : null;
+  React.useEffect(function () {
+    setPreviewText('');
+  }, [activeConvId]);
+
   return React.createElement(
     React.Fragment,
     null,
@@ -68,8 +74,9 @@ function validateKey(key, dispatch, relayRef) {
     }),
   })
     .then(function (res) {
+      // 200 = valid key; 400 = valid key but bad request format (we sent minimal body)
+      // 401 = invalid key; 403 = forbidden
       if (res.ok || res.status === 400) {
-        // 400 can mean "bad request" not "bad key"; treat as accepted
         dispatch({ type: 'API_KEY_SET', key: key });
         relayRef.current({ type: 'key_accepted' });
       } else {
@@ -97,7 +104,7 @@ function submitMessage(text, imageBase64, imageMimeType, state, dispatch, claude
   if (content.length === 0) return;
 
   var conv = state.activeConversation;
-  if (!conv) return; // AppContext effect ensures this is always set on chat screen
+  if (!conv) return;
 
   dispatch({ type: 'MESSAGE_USER_ADD', content: content });
 
@@ -106,6 +113,7 @@ function submitMessage(text, imageBase64, imageMimeType, state, dispatch, claude
   claude.sendMessage(
     state.apiKey,
     state.model,
+    state.systemPrompt,
     apiMessages,
     function (token) { dispatch({ type: 'STREAM_TOKEN', text: token }); },
     function (err) {

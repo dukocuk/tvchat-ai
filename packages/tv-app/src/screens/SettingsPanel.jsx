@@ -44,6 +44,22 @@ export default function SettingsPanel() {
           })
         ),
 
+        // System prompt presets
+        React.createElement('div', { className: 'settings-divider' }),
+        React.createElement('div', { className: 'settings-section-label' }, 'Persona'),
+        React.createElement(
+          'div',
+          { className: 'settings-model-list' },
+          ctx.SYSTEM_PROMPT_PRESETS.map(function (p) {
+            return React.createElement(PresetOption, {
+              key: p.label,
+              preset: p,
+              active: state.systemPrompt === p.prompt,
+              dispatch: dispatch,
+            });
+          })
+        ),
+
         // Reset API key
         React.createElement('div', { className: 'settings-divider' }),
         React.createElement(ResetKeyButton, { onReset: resetKey }),
@@ -77,6 +93,31 @@ function ModelOption(props) {
     },
     React.createElement('span', { className: 'settings-model-name' }, m.label),
     React.createElement('span', { className: 'settings-model-badge' }, m.badge),
+    active && React.createElement('span', { className: 'settings-model-check' }, '✓')
+  );
+}
+
+function PresetOption(props) {
+  var p = props.preset;
+  var active = props.active;
+  var dispatch = props.dispatch;
+
+  var fp = useFocusable({
+    focusKey: 'PRESET_' + p.label,
+    onEnterPress: function () { dispatch({ type: 'SYSTEM_PROMPT_SET', prompt: p.prompt }); },
+  });
+
+  return React.createElement(
+    'button',
+    {
+      ref: fp.ref,
+      className: 'settings-model-option' +
+        (active ? ' settings-model-option--active' : '') +
+        (fp.focused ? ' focused' : ''),
+      onClick: function () { dispatch({ type: 'SYSTEM_PROMPT_SET', prompt: p.prompt }); },
+    },
+    React.createElement('span', { className: 'settings-model-name' }, p.label),
+    p.badge && React.createElement('span', { className: 'settings-model-badge' }, p.badge),
     active && React.createElement('span', { className: 'settings-model-check' }, '✓')
   );
 }

@@ -74,6 +74,18 @@
 .setup-status-dot--connecting,
 .setup-status-dot--disconnected {
   background: #888888;
+  -webkit-animation: relay-pulse 1.4s ease-in-out infinite;
+  animation: relay-pulse 1.4s ease-in-out infinite;
+}
+
+@-webkit-keyframes relay-pulse {
+  0%, 100% { opacity: 0.3; -webkit-transform: scale(1); transform: scale(1); }
+  50%       { opacity: 1;   -webkit-transform: scale(1.3); transform: scale(1.3); }
+}
+
+@keyframes relay-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.3); }
 }
 
 .setup-status-dot--connected {

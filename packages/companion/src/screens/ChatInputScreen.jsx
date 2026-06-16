@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import '../App.css';
 import './screens.css';
 
-var MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4 MB base64 budget
+var MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4 MB base64 budget (~3 MB raw)
 
 export default function ChatInputScreen(props) {
   var relay = props.relay;
@@ -11,6 +11,8 @@ export default function ChatInputScreen(props) {
   var [text, setText] = useState('');
   var [sending, setSending] = useState(false);
   var [imagePending, setImagePending] = useState(null); // { base64, mimeType, previewUrl }
+  var [imageLoading, setImageLoading] = useState(false);
+  var [imageError, setImageError] = useState('');
   var textareaRef = useRef(null);
 
   // Send live preview as user types
@@ -42,10 +44,8 @@ export default function ChatInputScreen(props) {
     setImagePending(null);
     relay.send({ type: 'input_preview', text: '' });
 
-    // Re-focus textarea
     if (textareaRef.current) textareaRef.current.focus();
 
-    // Allow re-send after a moment
     setTimeout(function () { setSending(false); }, 1500);
     if (onAck) onAck();
   }
@@ -54,28 +54,34 @@ export default function ChatInputScreen(props) {
     var file = e.target.files && e.target.files[0];
     if (!file) return;
 
+    setImageError('');
+    setImageLoading(true);
+
     var reader = new FileReader();
     reader.onload = function (evt) {
+      setImageLoading(false);
       var dataUrl = evt.target.result;
-      // dataUrl = "data:image/jpeg;base64,/9j/..."
       var commaIdx = dataUrl.indexOf(',');
       var meta = dataUrl.slice(5, commaIdx); // "image/jpeg;base64"
       var mimeType = meta.split(';')[0];
       var base64 = dataUrl.slice(commaIdx + 1);
 
       if (base64.length > MAX_IMAGE_BYTES) {
-        alert('Image is too large. Please choose one under 3 MB.');
+        setImageError('Image too large — please choose one under 3 MB.');
         return;
       }
 
       setImagePending({ base64: base64, mimeType: mimeType, previewUrl: dataUrl });
     };
+    reader.onerror = function () {
+      setImageLoading(false);
+      setImageError('Could not read the image. Please try another file.');
+    };
     reader.readAsDataURL(file);
-    // Reset input so same file can be picked again
     e.target.value = '';
   }
 
-  var canSend = (text.trim() || imagePending) && !sending;
+  var canSend = (text.trim() || imagePending) && !sending && !imageLoading;
 
   return React.createElement(
     'div',
@@ -99,6 +105,25 @@ export default function ChatInputScreen(props) {
         }),
         relay.status === 'connected' ? 'TV connected' : relay.status
       )
+    ),
+
+    // Image error
+    imageError && React.createElement(
+      'div',
+      { className: 'image-error' },
+      imageError,
+      React.createElement(
+        'button',
+        { className: 'image-error-dismiss', onClick: function () { setImageError(''); } },
+        '✕'
+      )
+    ),
+
+    // Image loading state
+    imageLoading && React.createElement(
+      'div',
+      { className: 'image-loading' },
+      'Processing image…'
     ),
 
     // Image preview
@@ -133,7 +158,6 @@ export default function ChatInputScreen(props) {
       'div',
       { className: 'chat-actions' },
 
-      // Image picker
       React.createElement(
         'label',
         { className: 'image-picker-label', title: 'Attach image' },
@@ -143,10 +167,9 @@ export default function ChatInputScreen(props) {
           style: { display: 'none' },
           onChange: handleImagePick,
         }),
-        '🖼'
+        imageLoading ? '⟳' : '🖼'
       ),
 
-      // Send button
       React.createElement(
         'button',
         {

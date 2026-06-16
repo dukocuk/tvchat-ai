@@ -7,6 +7,11 @@ export default function ErrorScreen(props) {
     'div',
     { className: 'screen' },
     React.createElement('div', { className: 'error-icon' }, '⚠'),
-    React.createElement('p', { className: 'error-message' }, props.message || 'Something went wrong.')
+    React.createElement('p', { className: 'error-message' }, props.message || 'Something went wrong.'),
+    props.onRetry && React.createElement(
+      'button',
+      { className: 'retry-btn', onClick: props.onRetry },
+      'Retry'
+    )
   );
 }
