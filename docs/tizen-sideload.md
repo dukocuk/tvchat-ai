@@ -49,10 +49,22 @@ This runs the production build and copies all output into `packages/tv-app/tizen
 
 ## Step 4 — Sign and package the .wgt
 
-1. VS Code Command Palette → **Tizen TV: Build Signed Package**
-2. Select `packages/tv-app/tizen/` as the project root
-3. Select the certificate profile you created in Step 1
-4. A signed `clautv-ai.wgt` file is generated in the project folder
+> **Important — workspace root:** the Tizen TV extension only finds `config.xml`
+> at the **root of an active workspace folder**. It does *not* scan
+> subdirectories, so opening the monorepo root (`clautv-ai/`) by itself makes
+> **Build Signed Package** silently do nothing. Use one of these instead:
+>
+> - **Recommended (keeps all packages visible):** File → *Open Workspace from
+>   File…* → `clautv-ai.code-workspace`. This multi-root workspace shows the
+>   whole monorepo **and** exposes `packages/tv-app/tizen` as a dedicated root
+>   named **tizen-package**. Run the build with that root active.
+> - **Guaranteed fallback:** File → *Open Folder* → `packages/tv-app/tizen/`.
+
+1. Open the workspace as above
+2. VS Code Command Palette → **Tizen TV: Build Signed Package**
+3. Target the `tizen-package` root (or the `tizen/` folder if you opened it directly)
+4. Select the certificate profile you created in Step 1
+5. A signed `clautv-ai.wgt` file is generated in the project folder
 
 The `.wgt` file is git-ignored — don't commit it.
 

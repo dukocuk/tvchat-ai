@@ -1,0 +1,7 @@
+{
+  "folders": [
+    { "path": ".", "name": "clautv-ai (monorepo)" },
+    { "path": "packages/tv-app/tizen", "name": "tizen-package" }
+  ],
+  "settings": {}
+}
