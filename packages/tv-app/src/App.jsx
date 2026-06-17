@@ -52,7 +52,7 @@ export default function App() {
     React.Fragment,
     null,
     state.screen === 'setup'
-      ? React.createElement(SetupScreen, { relay: relay })
+      ? React.createElement(SetupScreen, { relay: relay, setupError: state.setupError })
       : React.createElement(ChatScreen, { relay: relay, previewText: previewText }),
     state.settingsOpen && React.createElement(SettingsPanel, null)
   );
@@ -74,17 +74,23 @@ function validateKey(key, dispatch, relayRef) {
     }),
   })
     .then(function (res) {
-      // 200 = valid key; 400 = valid key but bad request format (we sent minimal body)
-      // 401 = invalid key; 403 = forbidden
-      if (res.ok || res.status === 400) {
+      // Only 401/403 mean the key itself was rejected (unauthenticated / forbidden).
+      // Any other status (200, 400 minimal-body, 404 model-not-enabled, 429, 529, …) means
+      // the key authenticated fine — accept it. Otherwise a perfectly valid key that hits a
+      // rate limit or a model gating issue would look "rejected" and leave the TV on the QR.
+      if (res.status === 401 || res.status === 403) {
+        var err = 'Invalid API key (status ' + res.status + ')';
+        dispatch({ type: 'KEY_REJECTED', error: err });
+        relayRef.current({ type: 'key_rejected', error: err });
+      } else {
         dispatch({ type: 'API_KEY_SET', key: key });
         relayRef.current({ type: 'key_accepted' });
-      } else {
-        relayRef.current({ type: 'key_rejected', error: 'Invalid API key (status ' + res.status + ')' });
       }
     })
     .catch(function () {
-      relayRef.current({ type: 'key_rejected', error: 'Network error during validation' });
+      var netErr = 'Network error reaching api.anthropic.com';
+      dispatch({ type: 'KEY_REJECTED', error: netErr });
+      relayRef.current({ type: 'key_rejected', error: netErr });
     });
 }
 

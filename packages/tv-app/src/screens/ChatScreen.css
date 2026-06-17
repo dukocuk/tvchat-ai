@@ -49,7 +49,11 @@
   display: flex;
   -webkit-align-items: center;
   align-items: center;
-  gap: 24px;
+}
+
+/* flex `gap` is Chromium 84+ — use sibling margins for M47 */
+.chat-topbar-right > * + * {
+  margin-left: 24px;
 }
 
 .chat-model-badge {

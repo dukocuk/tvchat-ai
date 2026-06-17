@@ -17,14 +17,38 @@ export function useClaudeAPI() {
   var sendMessage = useCallback(function (apiKey, model, systemPrompt, apiMessages, onToken, onDone) {
     if (abortRef.current) abortRef.current.abort();
 
-    var controller = new AbortController();
+    // AbortController is Chromium 66+ and is NOT polyfilled by core-js (it's a
+    // DOM API, not ECMAScript). On M47 it's absent, so guard it: the request
+    // simply can't be cancelled there and we ignore any late result instead.
+    var controller =
+      typeof AbortController !== 'undefined' ? new AbortController() : null;
     abortRef.current = controller;
     setStreaming(true);
     setError(null);
 
-    // 60-second hard timeout — prevents "thinking forever" if API hangs
+    // Call-once guards so onDone fires exactly one time across the
+    // success / error / timeout paths.
+    var settled = false;
+    var timedOut = false;
+    function cleanup() {
+      clearTimeout(timeoutId);
+      setStreaming(false);
+    }
+    function finish(errMsg) {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      if (errMsg) setError(errMsg);
+      onDone(errMsg || null);
+    }
+
+    // 60-second hard timeout — prevents "thinking forever" if the API hangs.
+    // On modern engines we also abort the fetch; on M47 we can't, so we rely
+    // on the `timedOut` flag to discard whatever comes back later.
     var timeoutId = setTimeout(function () {
-      controller.abort();
+      timedOut = true;
+      if (controller) controller.abort();
+      finish('Request timed out after 60 seconds');
     }, 60000);
 
     var requestBody = {
@@ -39,7 +63,7 @@ export function useClaudeAPI() {
 
     fetch(API_URL, {
       method: 'POST',
-      signal: controller.signal,
+      signal: controller ? controller.signal : undefined,
       headers: {
         'content-type': 'application/json',
         'x-api-key': apiKey,
@@ -49,6 +73,7 @@ export function useClaudeAPI() {
       body: JSON.stringify(requestBody),
     })
       .then(function (res) {
+        if (timedOut) return;
         if (!res.ok) {
           return res.json().then(function (data) {
             throw new Error(
@@ -58,9 +83,12 @@ export function useClaudeAPI() {
         }
 
         if (SUPPORTS_STREAMING) {
-          return consumeStream(res, onToken, function () { onDone(null); });
+          return consumeStream(res, function (token) {
+            if (!timedOut) onToken(token);
+          }, function () { finish(null); });
         } else {
           return res.json().then(function (data) {
+            if (timedOut) return;
             var text = '';
             if (data.content) {
               data.content.forEach(function (block) {
@@ -68,32 +96,22 @@ export function useClaudeAPI() {
               });
             }
             if (!text) {
-              onDone('Empty response from API');
+              finish('Empty response from API');
               return;
             }
             onToken(text);
-            onDone(null);
+            finish(null);
           });
         }
       })
       .catch(function (err) {
+        if (timedOut) return;
         if (err.name === 'AbortError') {
-          // Could be user cancel or our 60s timeout
-          var timedOut = controller.signal.aborted && timeoutId;
-          if (timedOut) {
-            var msg = 'Request timed out after 60 seconds';
-            setError(msg);
-            onDone(msg);
-          }
+          // User cancel (cancel()) — no error surfaced, just stop streaming.
+          cleanup();
           return;
         }
-        var msg = err.message || 'Unknown error';
-        setError(msg);
-        onDone(msg);
-      })
-      .finally(function () {
-        clearTimeout(timeoutId);
-        setStreaming(false);
+        finish(err.message || 'Unknown error');
       });
   }, []);
 

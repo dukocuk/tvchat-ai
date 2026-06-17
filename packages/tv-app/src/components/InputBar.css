@@ -5,11 +5,15 @@
   flex-direction: row;
   -webkit-align-items: center;
   align-items: center;
-  gap: 24px;
   padding: 20px 32px;
   background: #0f0f0f;
   border-top: 1px solid #1e1e1e;
   min-height: 140px;
+}
+
+/* flex `gap` is Chromium 84+ — use sibling margins for M47 */
+.input-bar > * + * {
+  margin-left: 24px;
 }
 
 /* QR section */
@@ -20,8 +24,11 @@
   flex-direction: column;
   -webkit-align-items: center;
   align-items: center;
-  gap: 8px;
   min-width: 110px;
+}
+
+.input-bar-qr > * + * {
+  margin-top: 8px;
 }
 
 .input-bar-qr-code {

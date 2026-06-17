@@ -16,12 +16,16 @@ export default function App() {
 
   var [context, setContext] = useState(urlCtx);
   var [tvAcknowledged, setTvAcknowledged] = useState(false);
+  // null = no result yet; { ok: true } = TV accepted the key; { ok: false, error } = rejected
+  var [keyResult, setKeyResult] = useState(null);
 
   var handleMessage = useCallback(function (msg) {
     if (msg.type === 'context') {
       setContext(msg.value || urlCtx);
-    } else if (msg.type === 'key_accepted' || msg.type === 'key_rejected') {
-      setTvAcknowledged(true);
+    } else if (msg.type === 'key_accepted') {
+      setKeyResult({ ok: true });
+    } else if (msg.type === 'key_rejected') {
+      setKeyResult({ ok: false, error: msg.error || 'The TV rejected your key.' });
     } else if (msg.type === 'message_queued') {
       setTvAcknowledged(true);
     }
@@ -61,7 +65,11 @@ export default function App() {
   }
 
   if (context === 'setup') {
-    return React.createElement(SetupKeyScreen, { relay: relay, acknowledged: tvAcknowledged });
+    return React.createElement(SetupKeyScreen, {
+      relay: relay,
+      keyResult: keyResult,
+      onRetry: function () { setKeyResult(null); },
+    });
   }
 
   return React.createElement(ChatInputScreen, {

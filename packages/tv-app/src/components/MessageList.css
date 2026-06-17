@@ -6,8 +6,12 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 24px;
   overflow-y: auto;
+}
+
+/* flex `gap` is Chromium 84+ — use sibling margins for M47 */
+.message-list > * + * {
+  margin-top: 24px;
 }
 
 .message-list-empty {
@@ -21,8 +25,11 @@
   justify-content: center;
   -webkit-flex: 1;
   flex: 1;
-  gap: 16px;
   opacity: 0.5;
+}
+
+.message-list-empty > * + * {
+  margin-top: 16px;
 }
 
 .message-list-empty-icon {
@@ -106,9 +113,12 @@
 .thinking-dots {
   display: -webkit-flex;
   display: flex;
-  gap: 8px;
   -webkit-align-items: center;
   align-items: center;
+}
+
+.thinking-dots > * + * {
+  margin-left: 8px;
 }
 
 .thinking-dots span {
@@ -157,7 +167,10 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 16px;
+}
+
+.md > * + * {
+  margin-top: 16px;
 }
 
 .md-p {
@@ -213,7 +226,11 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 10px;
+}
+
+.md-ul > * + *,
+.md-ol > * + * {
+  margin-top: 10px;
 }
 
 .md-li {
