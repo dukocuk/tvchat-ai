@@ -24,7 +24,11 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 24px;
+}
+
+/* flex `gap` is Chromium 84+ — use sibling margins for M47 */
+.settings-panel > * + * {
+  margin-top: 24px;
 }
 
 .settings-heading {
@@ -47,7 +51,10 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 12px;
+}
+
+.settings-model-list > * + * {
+  margin-top: 12px;
 }
 
 .settings-model-option {
@@ -55,7 +62,6 @@
   display: flex;
   -webkit-align-items: center;
   align-items: center;
-  gap: 16px;
   background: #1a1a1a;
   border: 2px solid #2a2a2a;
   border-radius: 12px;
@@ -65,6 +71,10 @@
   font-size: 28px;
   text-align: left;
   width: 100%;
+}
+
+.settings-model-option > * + * {
+  margin-left: 16px;
 }
 
 .settings-model-option--active {

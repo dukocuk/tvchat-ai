@@ -9,7 +9,11 @@
   -webkit-flex-direction: column;
   flex-direction: column;
   padding: 32px 20px 24px;
-  gap: 20px;
+}
+
+/* flex `gap` is Chromium 84+ — use sibling margins for M47 */
+.sidebar > * + * {
+  margin-top: 20px;
 }
 
 .sidebar-logo {
@@ -58,7 +62,10 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 8px;
+}
+
+.sidebar-list > * + * {
+  margin-top: 8px;
 }
 
 .sidebar-conv-item {
@@ -73,7 +80,10 @@
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  gap: 4px;
+}
+
+.sidebar-conv-item > * + * {
+  margin-top: 4px;
 }
 
 .sidebar-conv-item--active {
@@ -111,8 +121,11 @@
   display: flex;
   -webkit-align-items: center;
   align-items: center;
-  gap: 10px;
   padding: 8px;
+}
+
+.sidebar-relay-status > * + * {
+  margin-left: 10px;
 }
 
 .sidebar-relay-dot {
