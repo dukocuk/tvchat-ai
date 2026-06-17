@@ -39,6 +39,7 @@ function getInitialState() {
     streamingText: '',
     isStreaming: false,
     apiError: null,
+    setupError: null,
     settingsOpen: false,
   };
 }
@@ -47,7 +48,11 @@ function reducer(state, action) {
   switch (action.type) {
     case 'API_KEY_SET': {
       setApiKey(action.key);
-      return Object.assign({}, state, { apiKey: action.key, screen: 'chat', apiError: null });
+      return Object.assign({}, state, { apiKey: action.key, screen: 'chat', apiError: null, setupError: null });
+    }
+    case 'KEY_REJECTED': {
+      // Stay on the setup screen, but surface why the phone-sent key didn't take.
+      return Object.assign({}, state, { setupError: action.error || 'Key rejected' });
     }
     case 'API_KEY_RESET': {
       clearApiKey();

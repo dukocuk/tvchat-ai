@@ -4,7 +4,8 @@ import './screens.css';
 
 export default function SetupKeyScreen(props) {
   var relay = props.relay;
-  var acknowledged = props.acknowledged;
+  var keyResult = props.keyResult; // null | { ok:true } | { ok:false, error }
+  var onRetry = props.onRetry;
 
   var [key, setKey] = useState('');
   var [showKey, setShowKey] = useState(false);
@@ -17,13 +18,35 @@ export default function SetupKeyScreen(props) {
     setSent(true);
   }
 
-  if (acknowledged) {
+  function handleRetry() {
+    setSent(false);
+    if (onRetry) onRetry();
+  }
+
+  // TV accepted the key.
+  if (keyResult && keyResult.ok) {
     return React.createElement(
       'div',
       { className: 'screen' },
       React.createElement('div', { className: 'success-icon' }, '✓'),
       React.createElement('p', { className: 'success-text' }, 'API key accepted!'),
       React.createElement('p', { className: 'success-sub' }, 'You can now chat on your TV.')
+    );
+  }
+
+  // TV rejected the key — show the real reason and let the user try again.
+  if (keyResult && !keyResult.ok) {
+    return React.createElement(
+      'div',
+      { className: 'screen' },
+      React.createElement('div', { className: 'error-icon' }, '✕'),
+      React.createElement('p', { className: 'error-text' }, 'Key not accepted'),
+      React.createElement('p', { className: 'error-sub' }, keyResult.error),
+      React.createElement(
+        'button',
+        { className: 'send-btn', onClick: handleRetry, type: 'button' },
+        'Try again'
+      )
     );
   }
 

@@ -16,6 +16,7 @@ var SLOW_CONNECT_SECS = 8; // after this many seconds, show the warm-up hint
 
 export default function SetupScreen(props) {
   var relay = props.relay;
+  var setupError = props.setupError;
   var pairingUrl = COMPANION_URL + '/' + relay.sessionToken + '?ctx=setup';
   var statusText = STATUS_LABELS[relay.status] || relay.status;
   var phoneConnected = relay.status === 'peer_connected';
@@ -69,6 +70,13 @@ export default function SetupScreen(props) {
         className: 'setup-status-dot setup-status-dot--' + relay.status,
       }),
       React.createElement('span', { className: 'setup-status-text' }, statusText)
+    ),
+
+    // If a key arrived but didn't take, say why instead of silently showing the QR.
+    setupError && React.createElement(
+      'p',
+      { className: 'setup-error' },
+      setupError + ' — re-enter your key on your phone.'
     ),
 
     // Slow-connect hint shown after SLOW_CONNECT_SECS of waiting
