@@ -5,6 +5,7 @@
         version="1.0.0">
 
   <tizen:application id="clautvai.app" package="clautvai" required_version="3.0"/>
+  <tizen:profile name="tv"/>
 
   <name>clautv-ai</name>
   <description>AI chat for Samsung TV, powered by Claude API</description>
