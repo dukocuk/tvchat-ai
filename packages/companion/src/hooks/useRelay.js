@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
-var RELAY_URL = import.meta.env.VITE_RELAY_URL || 'wss://clautv-relay.onrender.com';
+var RELAY_URL = import.meta.env.VITE_RELAY_URL || 'wss://tvchat-relay.onrender.com';
 
 export function useRelay(roomId, onMessage) {
   var [status, setStatus] = useState('connecting');

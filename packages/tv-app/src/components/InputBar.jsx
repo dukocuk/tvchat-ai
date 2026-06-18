@@ -3,7 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 import './InputBar.css';
 
-var COMPANION_URL = import.meta.env.VITE_COMPANION_URL || 'https://companion.clautv.ai';
+var COMPANION_URL = import.meta.env.VITE_COMPANION_URL || 'https://companion.tvchat.ai';
 
 export default function InputBar(props) {
   var relay = props.relay;

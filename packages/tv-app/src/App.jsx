@@ -26,8 +26,15 @@ export default function App() {
       submitMessage(msg.text || '', msg.base64, msg.mimeType, state, dispatch, claude, relayRef);
     } else if (msg.type === 'input_preview') {
       setPreviewText(msg.text || '');
+    } else if (msg.type === 'set_model') {
+      // Only accept a model id the TV actually knows about — never forward an
+      // arbitrary string to the API.
+      var known = ctx.MODELS.some(function (m) { return m.id === msg.model; });
+      if (known) {
+        dispatch({ type: 'MODEL_SET', model: msg.model });
+      }
     }
-  }, [state, dispatch, claude]);
+  }, [state, dispatch, claude, ctx.MODELS]);
 
   var relay = useRelay(handleRelayMessage);
 
@@ -41,6 +48,15 @@ export default function App() {
       relay.send({ type: 'context', value: state.screen });
     }
   }, [state.screen, relay.status]);
+
+  // Keep the phone's model picker in sync: push the model list + current
+  // selection when a phone connects and whenever the model changes (incl. when
+  // it's changed from the TV's own settings panel).
+  React.useEffect(function () {
+    if (relay.status === 'peer_connected') {
+      relay.send({ type: 'model_state', model: state.model, models: ctx.MODELS });
+    }
+  }, [state.model, relay.status, ctx.MODELS]);
 
   // Clear preview text when conversation changes
   var activeConvId = state.activeConversation ? state.activeConversation.id : null;

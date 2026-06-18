@@ -1,5 +1,5 @@
 {
-  "name": "clautv-ai",
+  "name": "tvchat-ai",
   "private": true,
   "workspaces": [
     "packages/*"

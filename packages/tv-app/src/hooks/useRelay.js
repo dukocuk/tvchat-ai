@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState, useMemo } from 'react';
 import { generateToken } from '../utils/token';
 
-var RELAY_URL = import.meta.env.VITE_RELAY_URL || 'wss://clautv-relay.onrender.com';
+var RELAY_URL = import.meta.env.VITE_RELAY_URL || 'wss://tvchat-relay.onrender.com';
 var RECONNECT_DELAY_MS = 3000;
 
 export function useRelay(onMessage) {

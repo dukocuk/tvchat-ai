@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:tizen="http://tizen.org/ns/widgets"
-        id="http://clautv.ai/tv-app"
+        id="http://tvchat.ai/tv-app"
         version="1.0.0">
 
-  <tizen:application id="clautvai.app" package="clautvai" required_version="3.0"/>
+  <tizen:application id="tvchatai.app" package="tvchatai" required_version="3.0"/>
   <tizen:profile name="tv"/>
 
-  <name>clautv-ai</name>
+  <name>TVChat AI</name>
   <description>AI chat for Samsung TV, powered by Claude API</description>
 
   <content src="index.html"/>

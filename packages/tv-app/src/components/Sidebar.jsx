@@ -21,8 +21,8 @@ export default function Sidebar(props) {
       React.createElement(
         'div',
         { className: 'sidebar-logo' },
-        React.createElement('span', { className: 'sidebar-logo-text' }, 'clautv'),
-        React.createElement('span', { className: 'sidebar-logo-ai' }, '-ai')
+        React.createElement('span', { className: 'sidebar-logo-text' }, 'TVChat'),
+        React.createElement('span', { className: 'sidebar-logo-ai' }, 'AI')
       ),
 
       // New chat button

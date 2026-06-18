@@ -72,8 +72,8 @@ export default function SetupKeyScreen(props) {
       React.createElement(
         'div',
         { className: 'logo' },
-        'clautv',
-        React.createElement('span', null, '-ai')
+        'TVChat',
+        React.createElement('span', null, ' AI')
       ),
       React.createElement('p', { className: 'screen-title' }, 'Enter your Anthropic API key')
     ),

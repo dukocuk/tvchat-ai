@@ -55,7 +55,7 @@ This runs the production build and copies all output into `packages/tv-app/tizen
 > `config.xml`, **Build Signed Package** silently does nothing. Use one of these:
 >
 > - **Recommended (keeps all packages visible):** File → *Open Workspace from
->   File…* → `clautv-ai.code-workspace`. In that file, `packages/tv-app/tizen`
+>   File…* → `tvchat-ai.code-workspace`. In that file, `packages/tv-app/tizen`
 >   is deliberately listed **first** (shown as **tizen-package**), so the
 >   extension targets it; the whole monorepo is the second folder and stays
 >   visible. The folder order matters — tizen must be first.
@@ -64,7 +64,7 @@ This runs the production build and copies all output into `packages/tv-app/tizen
 1. Open the workspace as above (reload VS Code if you changed the folder order)
 2. VS Code Command Palette → **Tizen TV: Build Signed Package**
 3. Select the certificate profile you created in Step 1
-4. A signed `clautv-ai.wgt` file is generated in the project folder
+4. A signed `tvchat-ai.wgt` file is generated in the project folder
 
 The `.wgt` file is git-ignored — don't commit it.
 
@@ -73,12 +73,12 @@ The `.wgt` file is git-ignored — don't commit it.
 **Via Device Manager (GUI):**
 1. VS Code Command Palette → **Tizen TV: Open Device Manager**
 2. Connect to your TV's IP
-3. Right-click the TV → **Install App** → select `clautv-ai.wgt`
+3. Right-click the TV → **Install App** → select `tvchat-ai.wgt`
 
 **Via CLI (if `sdb` is in your PATH):**
 ```bash
 sdb connect <TV_IP>
-tizen install -n clautv-ai.wgt -t <device_serial>
+tizen install -n tvchat-ai.wgt -t <device_serial>
 ```
 
 The app appears in your TV's app list. Re-install after each build.

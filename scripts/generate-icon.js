@@ -1,5 +1,5 @@
 /**
- * Generates a 256x256 purple PNG icon for clautv-ai.
+ * Generates a 256x256 purple PNG icon for tvchat-ai.
  * Uses only Node.js built-ins (zlib for deflate, crypto for nothing — just fs + zlib).
  * No external dependencies required.
  */
@@ -13,7 +13,7 @@ const path = require('path');
 const WIDTH  = 256;
 const HEIGHT = 256;
 
-// clautv-ai accent purple: #a855f7
+// tvchat-ai accent purple: #a855f7
 const R = 168, G = 85, B = 247;
 
 // ─── CRC32 ────────────────────────────────────────────────────────────────────

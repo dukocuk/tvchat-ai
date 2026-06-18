@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: clautv-relay
+    name: tvchat-relay
     env: node
     plan: free
     rootDir: packages/relay

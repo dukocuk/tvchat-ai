@@ -7,6 +7,11 @@ var MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4 MB base64 budget (~3 MB raw)
 export default function ChatInputScreen(props) {
   var relay = props.relay;
   var onAck = props.onAck;
+  var modelState = props.modelState || { model: null, models: [] };
+
+  function handleModelChange(e) {
+    relay.send({ type: 'set_model', model: e.target.value });
+  }
 
   var [text, setText] = useState('');
   var [sending, setSending] = useState(false);
@@ -94,8 +99,8 @@ export default function ChatInputScreen(props) {
       React.createElement(
         'div',
         { className: 'logo' },
-        'clautv',
-        React.createElement('span', null, '-ai')
+        'TVChat',
+        React.createElement('span', null, ' AI')
       ),
       React.createElement(
         'div',
@@ -104,6 +109,29 @@ export default function ChatInputScreen(props) {
           className: 'status-dot status-dot--' + relay.status,
         }),
         relay.status === 'connected' ? 'TV connected' : relay.status
+      )
+    ),
+
+    // Model selector — only once the TV has sent its model list
+    modelState.models.length > 0 && React.createElement(
+      'div',
+      { className: 'chat-model-bar' },
+      React.createElement('label', { className: 'chat-model-label', htmlFor: 'model-select' }, 'Model'),
+      React.createElement(
+        'select',
+        {
+          id: 'model-select',
+          className: 'chat-model-select',
+          value: modelState.model || '',
+          onChange: handleModelChange,
+        },
+        modelState.models.map(function (m) {
+          return React.createElement(
+            'option',
+            { key: m.id, value: m.id },
+            m.badge ? m.label + ' · ' + m.badge : m.label
+          );
+        })
       )
     ),
 

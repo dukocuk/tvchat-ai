@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import './SetupScreen.css';
 
-var COMPANION_URL = import.meta.env.VITE_COMPANION_URL || 'https://companion.clautv.ai';
+var COMPANION_URL = import.meta.env.VITE_COMPANION_URL || 'https://companion.tvchat.ai';
 
 var STATUS_LABELS = {
   disconnected:   'Connecting to relay…',
@@ -45,8 +45,8 @@ export default function SetupScreen(props) {
     React.createElement(
       'div',
       { className: 'setup-logo' },
-      React.createElement('span', { className: 'setup-logo-text' }, 'clautv'),
-      React.createElement('span', { className: 'setup-logo-ai' }, '-ai')
+      React.createElement('span', { className: 'setup-logo-text' }, 'TVChat'),
+      React.createElement('span', { className: 'setup-logo-ai' }, 'AI')
     ),
 
     React.createElement('p', { className: 'setup-tagline' }, 'AI chat powered by Claude'),

@@ -99,7 +99,7 @@ wss.on('connection', (ws) => {
 });
 
 server.listen(PORT, () => {
-  console.log('clautv relay listening on port ' + PORT);
+  console.log('tvchat relay listening on port ' + PORT);
 });
 
 process.on('SIGTERM', () => {

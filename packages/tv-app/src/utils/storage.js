@@ -1,4 +1,4 @@
-var PREFIX = 'clautv_';
+var PREFIX = 'tvchat_';
 var MAX_CONVERSATIONS = 20;
 
 export function getApiKey() {

@@ -18,6 +18,8 @@ export default function App() {
   var [tvAcknowledged, setTvAcknowledged] = useState(false);
   // null = no result yet; { ok: true } = TV accepted the key; { ok: false, error } = rejected
   var [keyResult, setKeyResult] = useState(null);
+  // Model list + current selection, pushed by the TV. Empty until first model_state.
+  var [modelState, setModelState] = useState({ model: null, models: [] });
 
   var handleMessage = useCallback(function (msg) {
     if (msg.type === 'context') {
@@ -28,6 +30,8 @@ export default function App() {
       setKeyResult({ ok: false, error: msg.error || 'The TV rejected your key.' });
     } else if (msg.type === 'message_queued') {
       setTvAcknowledged(true);
+    } else if (msg.type === 'model_state') {
+      setModelState({ model: msg.model || null, models: msg.models || [] });
     }
   }, [urlCtx]);
 
@@ -76,5 +80,6 @@ export default function App() {
     relay: relay,
     acknowledged: tvAcknowledged,
     onAck: function () { setTvAcknowledged(false); },
+    modelState: modelState,
   });
 }
